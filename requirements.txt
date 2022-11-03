@@ -1,0 +1,4 @@
+﻿streamlit>=1.8.1
+streamlit-option-menu>=0.3.2
+fpdf >= 1.7.2
+fpdf2 >= 2.5.4
