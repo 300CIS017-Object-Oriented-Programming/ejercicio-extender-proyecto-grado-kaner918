@@ -2,6 +2,7 @@ import os
 
 from model.InfoActa import InfoActa
 from datetime import datetime
+from datetime import date
 from controller.ControladorPDF import ControladorPdf
 
 # Este archivo contiene las funcionalidades de la vista relacionado con la evaluación de las actas
@@ -9,17 +10,20 @@ from controller.ControladorPDF import ControladorPdf
 
 def agregar_acta(st, controlador):
     st.title("Generación De Actas")
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     col5, col6, col7, col8 = st.columns(4)
     # Objeto que modelará el formulario
     info_acta_obj = InfoActa(controlador.criterios)
     info_acta_obj.fecha_acta = datetime.today().strftime('%Y-%m-%d')
+
     with col1:
         info_acta_obj.autor = st.text_input("Autor")
     with col2:
         info_acta_obj.nombre_trabajo = st.text_input("Nombre De Trabajo")
     with col3:
         info_acta_obj.tipo_trabajo = st.selectbox('Tipo', ('Aplicado', 'Investigación'))
+    with col4:
+        info_acta_obj.fecha_presentacion = st.date_input("When's your birthday", date(2019, 7, 6))
     with col5:
         info_acta_obj.director = st.text_input("Director")
     with col6:
@@ -54,9 +58,9 @@ def ver_historico_acta(st, controlador):
     for acta in controlador.actas:
         st.write("#### Acta #", numero)
         numero += 1
-        col1, col2, col3, col4 = st.columns(4)
-        col5, col6, col7, col8 = st.columns(4)
-        col9, col10 = st.columns(2)
+        col1, col2, col3, col4, col5 = st.columns(5)
+        col6, col7, col8, col9 = st.columns(4)
+        col10, col11 = st.columns(2)
         with col1:
             st.write("**Autor**")
             st.write(acta.autor)
@@ -69,19 +73,24 @@ def ver_historico_acta(st, controlador):
         with col4:
             st.write("**Fecha De Creación**")
             st.write(acta.fecha_acta)
+
         with col5:
+            st.write("**Fecha De Presentación**")
+            st.write(acta.fecha_presentacion)
+
+        with col6:
             st.write("**Director**")
             st.write(acta.director)
-        with col6:
+        with col7:
             st.write("**Codirector**")
             st.write(acta.codirector)
-        with col7:
+        with col8:
             st.write("**Jurado #1**")
             st.write(acta.jurado1)
-        with col8:
+        with col9:
             st.write("**Jurado #2**")
             st.write(acta.jurado2)
-        with col9:
+        with col10:
             st.write("**Nota Final**")
             if not acta.estado:
                 st.write("Sin nota")
@@ -89,7 +98,7 @@ def ver_historico_acta(st, controlador):
                 st.write(acta.nota_final, "Acta Aprobada")
             else:
                 st.write(acta.nota_final, "Acta Reprobada")
-        with col10:
+        with col11:
             st.write("**Estado**")
             if not acta.estado:
                 st.write("Acta pendiente por calificar")
