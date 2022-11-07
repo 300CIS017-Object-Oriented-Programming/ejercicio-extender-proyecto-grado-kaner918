@@ -15,6 +15,7 @@ def agregar_acta(st, controlador):
     # Objeto que modelará el formulario
     info_acta_obj = InfoActa(controlador.criterios)
     info_acta_obj.fecha_acta = datetime.today().strftime('%Y-%m-%d')
+    state = False
 
     with col1:
         info_acta_obj.autor = st.text_input("Autor")
@@ -22,16 +23,50 @@ def agregar_acta(st, controlador):
         info_acta_obj.nombre_trabajo = st.text_input("Nombre De Trabajo")
     with col3:
         info_acta_obj.tipo_trabajo = st.selectbox('Tipo', ('Aplicado', 'Investigación'))
+
+        if info_acta_obj.tipo_trabajo == 'Aplicado':
+
+            controlador.cantidad_aplicados+=1
+
+        else:
+
+            controlador.cantidad_investigacion+=1
+
     with col4:
-        info_acta_obj.fecha_presentacion = st.date_input("When's your birthday", date(2019, 7, 6))
+        info_acta_obj.fecha_presentacion = st.date_input("fecha de presentación", date(2019, 7, 6))
     with col5:
-        info_acta_obj.director = st.text_input("Director")
+
+        directores = controlador.obtener_directores()
+
+        info_acta_obj.director = st.selectbox("directores", (x for x in directores))
+
     with col6:
         info_acta_obj.codirector = st.text_input("Codirector", "N.A")
     with col7:
+
         info_acta_obj.jurado1 = st.text_input("Jurado #1")
+        info_acta_obj.tipo_jurado1 = st.checkbox("¿es usted un jurado externo?")
+
+        if info_acta_obj.tipo_jurado1:
+
+            controlador.cantidad_jurados_externos+=1
+
+        else:
+
+            controlador.cantidad_jurados_internos+=1
+
     with col8:
         info_acta_obj.jurado2 = st.text_input("Jurado #2")
+        info_acta_obj.tipo_jurado2 = st.checkbox("¿es usted un jurado externo?", key=True)
+
+        if info_acta_obj.tipo_jurado2:
+
+            controlador.cantidad_jurados_externos += 1
+
+        else:
+
+            controlador.cantidad_jurados_internos += 1
+
     enviado_btn = st.button("Enviar")
 
     # Cuando se oprime el botón se agrega a la lista
@@ -105,6 +140,12 @@ def ver_historico_acta(st, controlador):
             else:
                 st.write("Acta calificada")
 
+def ver_estadistica(st, controlador):
+
+    st.write(f"cantidad aplicados {controlador.cantidad_aplicados}")
+    st.write(f"cantidad investigación {controlador.cantidad_investigacion}")
+    st.write(f"jurados externos {controlador.cantidad_jurados_externos}")
+    st.write(f"cantidad internos {controlador.cantidad_jurados_internos}")
 
 def evaluar_criterios(st, controlador):
     st.title("Evaluación de Criterios")
@@ -123,6 +164,8 @@ def evaluar_criterios(st, controlador):
                 nota_jurado2 = st.number_input(str(num) + ". Nota Jurado 2", 0.0, 5.0)
                 criterio.nota = ((nota_jurado1 + nota_jurado2) / 2) * criterio.porcentaje
                 criterio.observacion = st.text_input(str(num) + ". Observación", "Sin Comentarios.")
+                criterio.restricciones = st.text_input(str(num) + ". Restricciones", "Sin Comentarios.")
+                criterio.observaciones_adicionales = st.text_input(str(num) + ". Observaciones adicionales", "Sin Comentarios.")
                 temp += criterio.nota
                 num += 1
             if temp > 3.5:
@@ -142,6 +185,7 @@ def evaluar_criterios(st, controlador):
             acta.estado = True
     if flag:
         nota_min = 3.5
+
         if enviado_califica and temp > nota_min:
             st.balloons()
             st.success("Evaluación De acta Agregada exitosamente, acta aprobada.")

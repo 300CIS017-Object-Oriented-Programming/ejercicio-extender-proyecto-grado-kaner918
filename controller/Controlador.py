@@ -13,6 +13,11 @@ class Controlador:
     def __init__(self) -> None:
         super().__init__()
         self.actas = []
+        self.cantidad_aplicados = 0
+        self.cantidad_investigacion = 0
+        self.cantidad_jurados_externos = 0
+        self.cantidad_jurados_internos = 0
+        self.cantidad_nota_superior = 0
 
         # Inicializa los criterios de evaluacion de bse
         self.__inicializar_criterios()
@@ -32,6 +37,18 @@ class Controlador:
                  Criterio("Manejo y procesamiento de la información y bibliografía", 0.1),
                  Criterio("Calidad y presentación del documento escrito", 0.075),
                  Criterio("Presentación oral", 0.075), Criterio("Léxico amplio", 0.05)]
+
+    def obtener_directores(self):
+
+        return ["Luisa Fernanda Rincon",
+            "Juan Carlos Martinez",
+            "Maria Constanza Pabón",
+            "Gloria Inés Álvarez",
+            "Gerardo M Sarria M",
+            "Luis Eduardo Tobón",
+            "Juan Pablo García",
+            "Frank Martinez",
+            "Carlos Ramirez"]
 
     def mostrar_de_numero_a_palabras(self, numero):
         """

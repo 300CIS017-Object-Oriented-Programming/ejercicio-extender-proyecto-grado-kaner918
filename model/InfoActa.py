@@ -20,7 +20,8 @@ class InfoActa:
         self.fecha_presentacion = ""
         self.codirector = " "
         self.jurado1 = ""
-        self.jurado2 = ""
+        self.tipo_jurado1 = False
+        self.tipo_jurado2 = False
         self.nota_final = 0.0
         self.criterios = criterios
         self.estado = False
